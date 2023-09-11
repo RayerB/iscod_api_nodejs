@@ -49,4 +49,18 @@ userSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-module.exports = model("User", userSchema);
+module.exports = User = model("User", userSchema);
+
+// async function test() {
+//   const user = await User.find();
+//   new User({
+//     name: 'billy',
+//     password: 'azerty123',
+//     email: 'billy@mail.com',
+//     role: 'admin',
+//     age: 19
+//   }).save()
+
+// }
+
+// test();

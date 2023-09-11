@@ -4,9 +4,10 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const NotFoundError = require("./errors/not-found");
 const userRouter = require("./api/users/users.router");
+const articleRouter = require("./api/articles/articles.router");
 const usersController = require("./api/users/users.controller");
 const authMiddleware = require("./middlewares/auth");
-require("./api/articles/articles.schema"); // temporaire
+require("./api/articles/articles.model"); // temporaire
 const app = express();
 
 const server = http.createServer(app);
@@ -29,6 +30,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/users", authMiddleware, userRouter);
+app.use('/api/articles', authMiddleware, articleRouter);
 app.post("/login", usersController.login);
 
 app.use("/", express.static("public"));
