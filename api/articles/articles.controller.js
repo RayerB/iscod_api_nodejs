@@ -25,7 +25,6 @@ class ArticlesController {
   async create(req, res, next) {
     try {
       const article = await articlesService.create(req.body);
-      article.password = undefined;
       req.io.emit("article:create", article);
       res.status(201).json(article);
     } catch (err) {
@@ -34,10 +33,12 @@ class ArticlesController {
   }
   async update(req, res, next) {
     try {
+      if (req.user.role != "admin") {
+        throw new UnauthorizedError();
+      }
       const id = req.params.id;
       const data = req.body;
       const articleModified = await articlesService.update(id, data);
-      articleModified.password = undefined;
       res.json(articleModified);
     } catch (err) {
       next(err);
@@ -45,6 +46,9 @@ class ArticlesController {
   }
   async delete(req, res, next) {
     try {
+      if (req.user.role != "admin") {
+        throw new UnauthorizedError();
+      }
       const id = req.params.id;
       await articlesService.delete(id);
       req.io.emit("article:delete", { id });
